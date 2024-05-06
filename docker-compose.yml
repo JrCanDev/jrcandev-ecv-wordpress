@@ -13,6 +13,13 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
+      SITE_URL: '${SITE_URL}'
+      ADMIN_USER: '${ADMIN_USER}'
+      ADMIN_PASSWORD: '${ADMIN_PASSWORD}'
+      ADMIN_EMAIL: '${ADMIN_EMAIL}'
+      WP_TITLE: '${WP_TITLE}'
+      WP_IS_MULTISITE_SUBDOMAIN: '${WP_IS_MULTISITE_SUBDOMAIN}'
+      NAME: '${NAME}'
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: '${MYSQL_USERNAME}'
       WORDPRESS_DB_PASSWORD: '${MYSQL_PASSWORD}'

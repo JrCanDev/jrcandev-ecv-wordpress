@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Charger les variables d'environnements.
-source .env
-
 # Exporter la variable SITE_URL
 export SITE_URL=${SITE_URL:-defaulturl.com}
 export ADMIN_USER=${ADMIN_USER:-defaultuser}
@@ -33,7 +30,7 @@ done
 # Installer WordPress si non installé
 if ! wp core is-installed --allow-root; then
     wp core install --url=$SITE_URL --title=$WP_TITLE --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL --allow-root
-    wp core multisite-install --allow-root --url=$SITE_URL --base="/" --subdomains=$WP_IS_MULTISITE_SUBDOMAIN --title=$WP_TITLE --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL
+    wp core multisite-install --allow-root --url=$SITE_URL --base="/" --subdomains=false --title=$WP_TITLE --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASSWORD --admin_email=$ADMIN_EMAIL
 fi
 
 # Attendre indéfiniment pour garder le conteneur en cours d'exécution en arrière-plan

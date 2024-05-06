@@ -75,6 +75,12 @@ $table_prefix = 'wp_';
 */
 define( 'WP_DEBUG', true );
 /* Add any custom values between this line and the "stop editing" line. */
+
+define ('MULTISITE', true);
+define ('SUBDOMAIN_INSTALL', false);
+define ('DOMAIN_CURRENT_SITE', getenv('SITE_URL'));
+define ('PATH_CURRENT_SITE', '/');
+
 /* That's all, stop editing! Happy publishing. */
 
 define('COOKIE_DOMAIN', '');
