@@ -1,0 +1,48 @@
+networks:                                                                                                                                                     
+  web:                                                                                                                                                        
+    external: true                                                                                                                                            
+  lan:                                                                                                                                                        
+    external: false                                                                                                                                           
+    name: lan_${NAME}
+
+services:
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: '${MYSQL_USERNAME}'
+      WORDPRESS_DB_PASSWORD: '${MYSQL_PASSWORD}'
+      WORDPRESS_DB_NAME: exampledb
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+        - web
+        - lan
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${NAME}.entryPoints=websecure
+      - traefik.http.routers.${NAME}.rule=Host(`${NAME}.jrcan.dev`)
+      - traefik.http.routers.${NAME}.tls=true
+      - traefik.http.routers.${NAME}.tls.certresolver=myresolver
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: '${MYSQL_USERNAME}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+        - lan
+
+
+volumes:
+  wordpress:
+  db:
