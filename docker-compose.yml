@@ -18,8 +18,12 @@ services:
       ADMIN_PASSWORD: '${ADMIN_PASSWORD}'
       ADMIN_EMAIL: '${ADMIN_EMAIL}'
       WP_TITLE: '${WP_TITLE}'
-      WP_IS_MULTISITE_SUBDOMAIN: '${WP_IS_MULTISITE_SUBDOMAIN}'
+      WP_IS_MULTISITE_SUBDOMAIN: '${WP_IS_MULTISITE_SUBDOMAIN}'        
       NAME: '${NAME}'
+      WORDPRESS_DB_HOST: 'mysql'
+      WORDPRESS_DB_USER: '${MYSQL_USER}'
+      WORDPRESS_DB_PASSWORD: '${MYSQL_PASSWORD}'
+      WORDPRESS_DB_NAME: 'wordpress'     
     volumes:
       - wordpress:/var/www/html
     networks:
@@ -33,13 +37,15 @@ services:
       - traefik.http.routers.${NAME}.tls.certresolver=myresolver
 
   db:
-    image: mysql:8.0
+    image: mysql:5.7
     container_name: mysql
+    hostname: mysql
     restart: always
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: 'wordpress'
+      MYSQL_USER:  '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}' 
     volumes:
       - db:/var/lib/mysql
     networks:
