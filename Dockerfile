@@ -5,13 +5,13 @@ RUN apt-get update && \
     apt-get install -y default-mysql-client && \
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
+    mv wp-cli.phar /var/www/html/wp
 
 # Copier le script d'initialisation
-COPY ./init-wp.sh /usr/local/bin/init-wp.sh
+COPY init-wp.sh /var/www/html//init-wp.sh
 COPY ./wp-config.php /var/www/html/wp-config.php
 COPY ./.htaccess /var/www/html/.htaccess
-RUN chmod +x /usr/local/bin/init-wp.sh
+RUN chmod +x /var/www/html//init-wp.sh
 
-ENTRYPOINT ["/usr/local/bin/init-wp.sh"]
+ENTRYPOINT ["/var/www/html/init-wp.sh"]
 CMD ["apache2-foreground"]

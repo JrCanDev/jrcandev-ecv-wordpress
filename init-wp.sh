@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Variables d'environnements
+# Exporter la variable SITE_URL
 export SITE_URL=${SITE_URL:-defaulturl.com}
 export ADMIN_USER=${ADMIN_USER:-defaultuser}
 export ADMIN_PASSWORD=${ADMIN_PASSWORD:-defaultpassword}
