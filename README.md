@@ -1,6 +1,22 @@
 # jrcandev-ecv-wordpress
 Test of automatic creation of sites and users for multisite wordpress
 
+# .env Format
+
+```bash
+SITE_URL="localhost:PORT"
+SITE_COMPLETE_URL="http://localhost:PORT"
+ADMIN_USER="admin_user"
+ADMIN_PASSWORD="admin_password"
+ADMIN_EMAIL="admin_email"
+WP_TITLE="wp_title"
+WP_IS_MULTISITE_SUBDOMAIN="false" # false for subdirectory and true for subdomain
+
+MYSQL_USER="wordpress"
+MYSQL_PASSWORD="root"
+NAME="name"
+```
+
 # How to test ?
 
 1. Build
@@ -35,7 +51,7 @@ docker cp students.txt <container_name>:/var/www/html/scripts/
 
 ```bash
 cd scripts
-python3 add_user.py
+python3 add_site.py
 ```
 
 8. Go to the multisites and check if new sites are created

@@ -7,8 +7,6 @@ RUN apt-get update && \
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp
-    
-
 
 # Copier le script d'initialisation
 COPY ./init-wp.sh /usr/local/bin/init-wp.sh
