@@ -6,17 +6,18 @@ import subprocess
 
 students= []
 
-# Read a text file line by line
-with open('students.txt', 'r') as file:
-    for line in file:
-        words = line.strip().split()
-        students.append({"firstname": words[0].lower(), "lastname": words[1].lower(), "email": words[0].lower()+words[1].lower()+"@etu.univ-littoral.fr"})
-        
 load_dotenv()
 # Variables
 site_url = os.getenv("SITE_COMPLETE_URL")
 admin_user = os.getenv("ADMIN_USER")
 admin_email = os.getenv("ADMIN_EMAIL")
+user_email = os.getenv("USER_EMAIL")
+
+# Read a text file line by line
+with open('students.txt', 'r') as file:
+    for line in file:
+        words = line.strip().split()
+        students.append({"firstname": words[0].lower(), "lastname": words[1].lower(), "email": words[0].lower()+'.'+words[1].lower()+user_email})
 
 # Vérifiez que les variables d'environnement sont bien chargées
 if not site_url or not admin_user or not admin_email:

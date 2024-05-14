@@ -9,6 +9,7 @@ SITE_COMPLETE_URL="http://localhost:PORT"
 ADMIN_USER="admin_user"
 ADMIN_PASSWORD="admin_password"
 ADMIN_EMAIL="admin_email"
+USER_EMAIL="user_email"
 WP_TITLE="wp_title"
 WP_IS_MULTISITE_SUBDOMAIN="false" # false for subdirectory and true for subdomain
 
