@@ -7,19 +7,17 @@ import subprocess
 students= []
 
 load_dotenv()
-# Variables
 site_url = os.getenv("SITE_COMPLETE_URL")
 admin_user = os.getenv("ADMIN_USER")
 admin_email = os.getenv("ADMIN_EMAIL")
 user_email = os.getenv("USER_EMAIL")
 
-# Read a text file line by line
 with open('students.txt', 'r') as file:
     for line in file:
         words = line.strip().split()
         students.append({"firstname": words[0].lower(), "lastname": words[1].lower(), "email": words[0].lower()+'.'+words[1].lower()+user_email})
 
-# Vérifiez que les variables d'environnement sont bien chargées
+# Check that all environment variables are set
 if not site_url or not admin_user or not admin_email:
     print("Erreur: Une ou plusieurs variables d'environnement ne sont pas définies.")
     print(f"SITE_COMPLETE_URL={site_url}")
@@ -33,7 +31,7 @@ for student in students:
     new_site_title = student["firstname"] + " " + student["lastname"]
     password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
 
-    # Créer un sous-site avec WP-CLI
+    # subsite creation
     command = [
         'wp', 'site', 'create',
         '--slug={}'.format(new_site_slug),
