@@ -74,8 +74,6 @@ $table_prefix = 'wp_';
 * @link https://wordpress.org/support/article/debugging-in-wordpress/
 */
 define('WP_DEBUG', true);
-define('WP_DEBUG_LOG', true);
-define('WP_DEBUG_DISPLAY', false);
 /* Add any custom values between this line and the "stop editing" line. */
 
 define ('MULTISITE', true);
@@ -84,9 +82,6 @@ define ('DOMAIN_CURRENT_SITE', getenv('SITE_URL'));
 define ('PATH_CURRENT_SITE', '/');
 define ('SITE_ID_CURRENT_SITE', 1);
 define ('BLOG_ID_CURRENT_SITE', 1);
-
-define('WP_HOME', getenv('SITE_COMPLETE_URL'));
-define('WP_SITEURL', getenv('SITE_COMPLETE_URL'));
 
 /* That's all, stop editing! Happy publishing. */
 
