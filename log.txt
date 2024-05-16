@@ -1,0 +1,18 @@
+time="2024-05-15T18:22:44Z" level=error msg="service \"wordpress-jrcandev-ecv-wordpress\" error: unable to find the IP address for the container \"/jrcandev-ecv-wordpress_wordpress_1\": the server is ignored" container=wordpress-jrcandev-ecv-wordpress-6a8645b5c665e06a0d30b4a1f64b07f05b1eebcb3131e84fca01862a2dd29558 providerName=docker
+time="2024-05-15T18:22:44Z" level=error msg="service \"wordpress-jrcandev-ecv-wordpress\" error: unable to find the IP address for the container \"/jrcandev-ecv-wordpress_wordpress_1\": the server is ignored" providerName=docker container=wordpress-jrcandev-ecv-wordpress-6a8645b5c665e06a0d30b4a1f64b07f05b1eebcb3131e84fca01862a2dd29558
+time="2024-05-15T18:22:44Z" level=error msg="service \"wordpress-jrcandev-ecv-wordpress\" error: unable to find the IP address for the container \"/jrcandev-ecv-wordpress_wordpress_1\": the server is ignored" providerName=docker container=wordpress-jrcandev-ecv-wordpress-6a8645b5c665e06a0d30b4a1f64b07f05b1eebcb3131e84fca01862a2dd29558
+time="2024-05-15T18:22:45Z" level=error msg="service \"wordpress-jrcandev-ecv-wordpress\" error: unable to find the IP address for the container \"/jrcandev-ecv-wordpress_wordpress_1\": the server is ignored" container=wordpress-jrcandev-ecv-wordpress-6a8645b5c665e06a0d30b4a1f64b07f05b1eebcb3131e84fca01862a2dd29558 providerName=docker
+time="2024-05-15T18:23:16Z" level=error msg="service \"wordpress-jrcandev-ecv-wordpress\" error: unable to find the IP address for the container \"/jrcandev-ecv-wordpress_wordpress_1\": the server is ignored" providerName=docker container=wordpress-jrcandev-ecv-wordpress-6a8645b5c665e06a0d30b4a1f64b07f05b1eebcb3131e84fca01862a2dd29558
+
+
+> Le traefik.toml est bien défini ?
+Avec un port ? - "traefik.http.services.${NAME}.loadbalancer.server.port=80"
+entryPoints web/websecure est accessible ?
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.websecure]
+    address = ":443"
+
+
