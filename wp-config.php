@@ -1,4 +1,9 @@
 <?php
+
+// Forcing wordpress to use ssl
+$_SERVER['HTTPS'] = 'on';
+define('FORCE_SSL_ADMIN', true);
+
 /**
 * The base configuration for WordPress
 *
