@@ -13,6 +13,7 @@ COPY ./init-wp.sh /usr/local/bin/init-wp.sh
 COPY ./wp-config.php /var/www/html/wp-config.php
 COPY ./.htaccess /var/www/html/.htaccess
 RUN chmod +x /usr/local/bin/init-wp.sh
+RUN chmod 644 /var/www/html/
 
 # Copier les scripts python
 COPY ./scripts /var/www/html/scripts

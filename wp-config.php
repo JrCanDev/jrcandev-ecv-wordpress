@@ -1,8 +1,12 @@
 <?php
 
 // Forcing wordpress to use ssl
-$_SERVER['HTTPS'] = 'on';
-define('FORCE_SSL_ADMIN', true);
+if ($_SERVER['HTTP_HOST'] !== 'localhost:8080') {
+   $_SERVER['HTTPS'] = 'on';
+   define('FORCE_SSL_ADMIN', true);
+} else {
+   define('FORCE_SSL_ADMIN', false);
+}
 
 /**
 * The base configuration for WordPress
