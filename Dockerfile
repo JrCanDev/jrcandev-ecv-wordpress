@@ -15,7 +15,7 @@ COPY ./.htaccess /var/www/html/.htaccess
 RUN chmod +x /usr/local/bin/init-wp.sh
 RUN chmod 644 /var/www/html/
 
-# Copier les scripts python
+# Copier les scripts
 COPY ./scripts /var/www/html/scripts
 
 # Copier le fichier .env

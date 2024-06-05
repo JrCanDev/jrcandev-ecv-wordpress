@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 import secrets
 import string
 import subprocess
+import smtplib
+from email.mime.text import MIMEText
+import requests
 
 students = []
 
@@ -11,6 +14,10 @@ site_url = os.getenv("SITE_COMPLETE_URL")
 admin_user = os.getenv("ADMIN_USER")
 admin_email = os.getenv("ADMIN_EMAIL")
 user_email = os.getenv("USER_EMAIL")
+smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+smtp_port = int(os.getenv("SMTP_PORT", 465))
+smtp_user = os.getenv("SMTP_USER")
+smtp_password = os.getenv("SMTP_PASSWORD")
 
 with open('students.txt', 'r') as file:
     for line in file:
@@ -18,11 +25,13 @@ with open('students.txt', 'r') as file:
         students.append({"firstname": words[0].lower(), "lastname": words[1].lower(), "email": words[0].lower() + '.' + words[1].lower() + user_email})
 
 # Check that all environment variables are set
-if not site_url or not admin_user or not admin_email:
+if not site_url or not admin_user or not admin_email or not smtp_user or not smtp_password:
     print("Erreur: Une ou plusieurs variables d'environnement ne sont pas définies.")
     print(f"SITE_COMPLETE_URL={site_url}")
     print(f"ADMIN_USER={admin_user}")
     print(f"ADMIN_EMAIL={admin_email}")
+    print(f"SMTP_USER={smtp_user}")
+    print(f"SMTP_PASSWORD={'set' if smtp_password else 'not set'}")
     exit(1)
 
 for student in students:
@@ -58,20 +67,38 @@ for student in students:
         if result_site_create.returncode == 0:
             print(f"Sous-site pour {student['firstname']} {student['lastname']} créé avec succès!")
 
-            # Initiate password reset for the new user
-            command_password_reset = [
-                'wp', 'user', 'reset-password', username,
-                '--allow-root'
-            ]
+            # Send email with initial password
+            login_url = f"{site_url}/wp-login.php"
+            subject = "Welcome to Your New Site"
+            body = f"""
+            Hello {student['firstname']} {student['lastname']},
 
-            result_password_reset = subprocess.run(command_password_reset, capture_output=True, text=True)
+            Your account has been created successfully.
 
-            if result_password_reset.returncode == 0:
-                print(f"Email de réinitialisation de mot de passe envoyé à {student['email']}!")
-            else:
-                print(f"Erreur lors de l'envoi de l'email de réinitialisation pour {username}: {result_password_reset.returncode}")
-                print(result_password_reset.stdout)
-                print(result_password_reset.stderr)
+            Username: {username}
+            Password: {password}
+
+            You can log in to your site using the following URL:
+            {login_url}
+
+            Please log in and change your password immediately after logging in.
+
+            Best regards,
+            {admin_user}
+            """
+
+            msg = MIMEText(body)
+            msg['Subject'] = subject
+            msg['From'] = admin_email
+            msg['To'] = student["email"]
+
+            try:
+                with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+                    server.login(smtp_user, smtp_password)
+                    server.sendmail(admin_email, [student["email"]], msg.as_string())
+                print(f"Email contenant le mot de passe initial envoyé à {student['email']}!")
+            except Exception as e:
+                print(f"Erreur lors de l'envoi de l'email pour {username}: {e}")
         else:
             print(f"Erreur lors de la création du sous-site pour {student['firstname']} {student['lastname']}: {result_site_create.returncode}")
             print(result_site_create.stdout)
