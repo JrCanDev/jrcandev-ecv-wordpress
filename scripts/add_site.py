@@ -1,14 +1,59 @@
 import os
+import sys
+import pandas as pd
 from dotenv import load_dotenv
 import secrets
 import string
 import subprocess
 import smtplib
 from email.mime.text import MIMEText
-import requests
+from odf.opendocument import load as load_ods
+from odf.table import Table, TableRow, TableCell
+from odf.text import P
 
-students = []
+def load_students(file_path):
+    students = []
+    file_extension = os.path.splitext(file_path)[1]
+    
+    if file_extension == '.txt':
+        with open(file_path, 'r') as file:
+            for line in file:
+                words = line.strip().split()
+                students.append({"firstname": words[0].lower(), "lastname": words[1].lower()})
+    elif file_extension in ['.xls', '.xlsx']:
+        df = pd.read_excel(file_path)
+        for index, row in df.iterrows():
+            students.append({"firstname": row['Prénom'].strip().lower(), "lastname": row['Nom'].strip().lower()})
+    elif file_extension == '.ods':
+        doc = load_ods(file_path)
+        sheet = doc.spreadsheet.getElementsByType(Table)[0]
+        for row in sheet.getElementsByType(TableRow):
+            cells = row.getElementsByType(TableCell)
+            firstname = ""
+            lastname = ""
+            if len(cells) > 0:
+                firstname_elements = cells[0].getElementsByType(P)
+                if len(firstname_elements) > 0:
+                    firstname = "".join([str(text) for text in firstname_elements[0].childNodes]).strip().lower()
+            if len(cells) > 1:
+                lastname_elements = cells[1].getElementsByType(P)
+                if len(lastname_elements) > 0:
+                    lastname = "".join([str(text) for text in lastname_elements[0].childNodes]).strip().lower()
+            if firstname and lastname:
+                students.append({"firstname": firstname, "lastname": lastname})
+    else:
+        raise ValueError("Unsupported file format")
+    
+    return students
 
+# Vérifiez que le fichier de données est passé en argument
+if len(sys.argv) != 2:
+    print("Usage: python3 add_site.py <path_to_student_file>")
+    sys.exit(1)
+
+file_path = sys.argv[1]
+
+# Load environment variables
 load_dotenv()
 site_url = os.getenv("SITE_COMPLETE_URL")
 admin_user = os.getenv("ADMIN_USER")
@@ -19,10 +64,7 @@ smtp_port = int(os.getenv("SMTP_PORT", 465))
 smtp_user = os.getenv("SMTP_USER")
 smtp_password = os.getenv("SMTP_PASSWORD")
 
-with open('students.txt', 'r') as file:
-    for line in file:
-        words = line.strip().split()
-        students.append({"firstname": words[0].lower(), "lastname": words[1].lower(), "email": words[0].lower() + '.' + words[1].lower() + user_email})
+students = load_students(file_path)
 
 # Check that all environment variables are set
 if not site_url or not admin_user or not admin_email or not smtp_user or not smtp_password:
@@ -42,7 +84,7 @@ for student in students:
 
     # Create user
     command_user_create = [
-        'wp', 'user', 'create', username, student["email"],
+        'wp', 'user', 'create', username, student["firstname"] + '.' + student["lastname"] + user_email,
         '--user_pass={}'.format(password),
         '--role=subscriber',
         '--allow-root'
@@ -58,7 +100,7 @@ for student in students:
             'wp', 'site', 'create',
             '--slug={}'.format(new_site_slug),
             '--title={}'.format(new_site_title),
-            '--email={}'.format(student["email"]),
+            '--email={}'.format(student["firstname"] + '.' + student["lastname"] + user_email),
             '--allow-root'
         ]
 
@@ -90,13 +132,13 @@ for student in students:
             msg = MIMEText(body)
             msg['Subject'] = subject
             msg['From'] = admin_email
-            msg['To'] = student["email"]
+            msg['To'] = student["firstname"] + '.' + student["lastname"] + user_email
 
             try:
                 with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
                     server.login(smtp_user, smtp_password)
-                    server.sendmail(admin_email, [student["email"]], msg.as_string())
-                print(f"Email contenant le mot de passe initial envoyé à {student['email']}!")
+                    server.sendmail(admin_email, [student["firstname"] + '.' + student["lastname"] + user_email], msg.as_string())
+                print(f"Email contenant le mot de passe initial envoyé à {student['firstname'] + '.' + student['lastname'] + user_email}!")
             except Exception as e:
                 print(f"Erreur lors de l'envoi de l'email pour {username}: {e}")
         else:
