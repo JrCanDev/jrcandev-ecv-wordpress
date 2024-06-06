@@ -77,8 +77,8 @@ if not site_url or not admin_user or not admin_email or not smtp_user or not smt
     exit(1)
 
 for student in students:
-    username = student["firstname"] + "-" + student["lastname"]
-    new_site_slug = student["firstname"] + "-" + student["lastname"]
+    username = student["firstname"] + student["lastname"]
+    new_site_slug = student["firstname"] + student["lastname"]
     new_site_title = student["firstname"] + " " + student["lastname"]
     password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
 
