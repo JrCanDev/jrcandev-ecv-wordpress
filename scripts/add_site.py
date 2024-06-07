@@ -63,6 +63,7 @@ smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 smtp_port = int(os.getenv("SMTP_PORT", 465))
 smtp_user = os.getenv("SMTP_USER")
 smtp_password = os.getenv("SMTP_PASSWORD")
+test = os.getenv("TEST")
 
 students = load_students(file_path)
 
@@ -111,34 +112,71 @@ for student in students:
 
             # Send email with initial password
             login_url = f"{site_url}/wp-login.php"
-            subject = "Compte Wordpress"
-            body = f"""
-            Bonjour {student['firstname']} {student['lastname']},
+            
+            if test:
+                
+                subject = "Compte eCV Wordpress [À l'attention des testeurs]"
+                body = f"""
+                Bonjour {student['firstname']} {student['lastname']}, tu as été invité à participer au test du service d'eCV de JrCanDev !
+                
+                Ton rôle en tant que testeur est le suivant :
+                
+                - Tester et simuler la réalisation de ton eCV avec wordpress
+                - Remonter les potientiels bugs rencontrés (à Nathan Fourny)
+                - Proposer des améliorations pour le service (plugins, fonctionnalités, automatisations, etc...)
+                
+                Merci d'avance pour ta contribution au sein de ce projet, toute l'équipe de JrCanDev te remercie !
 
-            Ton compte a été crée avec succès ! Voici tes logins :
+                Voici tes logins :
 
-            Username: {username}
-            Password: {password}
+                Username: {username}
+                Password: {password}
 
-            Tu peux te connecter à ton site en utilisant l'addresse suivante:
-            {login_url}
+                Tu peux te connecter à ton site en utilisant l'adresse suivante:
+                {login_url}
 
-            Nous t'invitons à changer ton mot de passe dans tes paramètres utilisateur.
+                Nous t'invitons à changer ton mot de passe dans tes paramètres utilisateur.
 
-            Cordialement,
-            {admin_user}
-            """
+                Cordialement,
+                {admin_user}
+                """
 
-            msg = MIMEText(body)
-            msg['Subject'] = subject
-            msg['From'] = admin_email
-            msg['To'] = student["firstname"] + '.' + student["lastname"] + user_email
+                msg = MIMEText(body)
+                msg['Subject'] = subject
+                msg['From'] = admin_email
+                msg['To'] = student["firstname"] + '.' + student["lastname"] + user_email
+                
+            else:
+            
+                subject = "Compte Wordpress"
+                body = f"""
+                Bonjour {student['firstname']} {student['lastname']},
+
+                Ton compte a été crée avec succès ! Voici tes logins :
+
+                Username: {username}
+                Password: {password}
+
+                Tu peux te connecter à ton site en utilisant l'addresse suivante:
+                {login_url}
+
+                Nous t'invitons à changer ton mot de passe dans tes paramètres utilisateur.
+
+                Cordialement,
+                {admin_user}
+                """
+
+                msg = MIMEText(body)
+                msg['Subject'] = subject
+                msg['From'] = admin_email
+                msg['To'] = student["firstname"] + '.' + student["lastname"] + user_email
 
             try:
                 with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
                     server.login(smtp_user, smtp_password)
                     server.sendmail(admin_email, [student["firstname"] + '.' + student["lastname"] + user_email], msg.as_string())
                 print(f"Email contenant le mot de passe initial envoyé à {student['firstname'] + '.' + student['lastname'] + user_email}!")
+                    
             except Exception as e:
                 print(f"Erreur lors de l'envoi de l'email pour {username}: {e}")
         else:
