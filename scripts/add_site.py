@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from odf.opendocument import load as load_ods
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
+import time
 
 def load_students(file_path):
     students = []
@@ -187,3 +188,6 @@ for student in students:
         print(f"Erreur lors de la création de l'utilisateur {username}: {result_user_create.returncode}")
         print(result_user_create.stdout)
         print(result_user_create.stderr)
+        
+    # Wait 5 seconds between each user creation    
+    time.sleep(5)
