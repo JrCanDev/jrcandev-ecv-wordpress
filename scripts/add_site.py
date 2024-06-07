@@ -111,21 +111,21 @@ for student in students:
 
             # Send email with initial password
             login_url = f"{site_url}/wp-login.php"
-            subject = "Welcome to Your New Site"
+            subject = "Compte Wordpress"
             body = f"""
-            Hello {student['firstname']} {student['lastname']},
+            Bonjour {student['firstname']} {student['lastname']},
 
-            Your account has been created successfully.
+            Ton compte a été crée avec succès ! Voici tes logins :
 
             Username: {username}
             Password: {password}
 
-            You can log in to your site using the following URL:
+            Tu peux te connecter à ton site en utilisant l'addresse suivante:
             {login_url}
 
-            Please log in and change your password immediately after logging in.
+            Nous t'invitons à changer ton mot de passe dans tes paramètres utilisateur.
 
-            Best regards,
+            Cordialement,
             {admin_user}
             """
 
