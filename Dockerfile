@@ -10,22 +10,22 @@ RUN apt-get update && \
 
 # Copier le script d'initialisation
 COPY ./init-wp.sh /usr/local/bin/init-wp.sh
-COPY ./wp-config.php /var/www/html/wp-config.php
-COPY ./.htaccess /var/www/html/.htaccess
+COPY ./wp-config.php ecv_data/wordpress/wp-config.php
+COPY ./.htaccess ecv_data/wordpress/.htaccess
 RUN chmod +x /usr/local/bin/init-wp.sh
-RUN chmod 644 /var/www/html/
+RUN chmod 644 ecv_data/wordpress/
 
 # Copier les scripts
-COPY ./scripts /var/www/html/scripts
+COPY ./scripts ecv_data/wordpress/scripts
 
 # Copier le fichier .env
-COPY .env /var/www/html/scripts/.env
+COPY .env ecv_data/wordpress/scripts/.env
 
 # Installer les modules python
-COPY ./scripts/requirements.txt /var/www/html/scripts/requirements.txt
+COPY ./scripts/requirements.txt ecv_data/wordpress/scripts/requirements.txt
 RUN python3 -m venv /venv && \
     /venv/bin/pip install --upgrade pip && \
-    /venv/bin/pip install -r /var/www/html/scripts/requirements.txt
+    /venv/bin/pip install -r ecv_data/wordpress/scripts/requirements.txt
 
 # Ajouter l'environnement virtuel au PATH
 ENV PATH="/venv/bin:$PATH"
