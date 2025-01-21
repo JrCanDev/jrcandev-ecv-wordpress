@@ -1,13 +1,12 @@
 * Comment ajouter des utilisateurs
 
-1. Ecrire un fichier `students.txt` et suivre l'exemple suivant :
+1. Ecrire un fichier `students.txt` au format (Prenom Nom) et suivre l'exemple suivant :
 
 ```
 John Doe
 Bernard Durand
 Marie Dupont
-`
-``
+```
 2. Copier le fichier `students.txt` dans le container d'ecv wordpress et dans le dossier `scripts` (présent dans `/projet/tests/jrcandev-ecv-wordpress/`)
 
 ```bash
